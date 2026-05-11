@@ -10,6 +10,8 @@
 #include <Fonts/FreeSans12pt7b.h>
 #include <Fonts/FreeSans9pt7b.h>
 
+#include "Open_meteo.h"
+
 // ESP32-C6 CS(SS)=16,SCL(SCK)=4,SDA(MOSI)=6,BUSY=21,RES(RST)=22,DC=23
 #define CS_PIN (16)
 #define BUSY_PIN (21)
@@ -61,9 +63,8 @@ void setupDisplay() {
 }
 void setup() {
     Serial.begin(115200);
-    
-    setupWiFi() ;
     setupDisplay() ;
+    setupWiFi() ;
 
     if ( WiFi.isConnected() )
         Serial.println("Wifi connected...yeey :)");
@@ -71,7 +72,51 @@ void setup() {
  
 }
 
-void loop() {
+void WeatherOnDisplay(const strWeatherInfo &info) {
+ //   display.setRotation();
+    display.fillScreen(GxEPD_WHITE);
+    display.setFont(&FreeSans18pt7b);
+    display.setTextColor(GxEPD_BLACK);
+    display.setCursor(0, 30);
+    display.print("Temp: ");
+    display.print(info.temperature);
+    display.println(" C");
+
+    display.setFont(&FreeSans12pt7b);
+    display.setCursor(0, 60);
+    display.print("Wind: ");
+    display.print(info.wind_speed_10m);
+    display.println(" m/s");
+
+    display.setCursor(0, 90);
+    display.print("Code: ");
+    display.println(info.weather_code);
 
 
+    display.setCursor(0, 120);
+    display.print("Precip: ");
+    display.print(info.precipitation);
+    display.println(" mm");
+
+    display.setCursor(0, 150);
+    display.print("Humidity: ");
+    display.print(info.relative_humidity_2m);
+    display.println(" %");
+
+    display.display();
 }
+
+#define uS_TO_S_FACTOR 1000000ULL  /* Conversion factor for micro seconds to seconds */
+
+void loop() {
+    strWeatherInfo info = getWeatherInfo() ;
+    Serial.println("Updating weather info...");
+    WeatherOnDisplay(info) ;
+
+    if (!Serial.isPlugged()) {
+		esp_sleep_enable_timer_wakeup(300 * uS_TO_S_FACTOR);
+		esp_deep_sleep_start();
+	}
+    delay(300000) ; // Update every 5 minute
+}
+

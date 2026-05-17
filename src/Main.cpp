@@ -11,6 +11,7 @@
 #include <Fonts/FreeSans9pt7b.h>
 
 #include "Open_meteo.h"
+#include "WeatherDescription.h"
 
 // ESP32-C6 CS(SS)=16,SCL(SCK)=4,SDA(MOSI)=6,BUSY=21,RES(RST)=22,DC=23
 #define CS_PIN (16)
@@ -89,8 +90,8 @@ void WeatherOnDisplay(const strWeatherInfo &info) {
     display.println(" m/s");
 
     display.setCursor(0, 90);
-    display.print("Code: ");
-    display.println(info.weather_code);
+    display.print("Weather: ");
+    display.println(getWeatherDescription(info.weather_code,1));
 
 
     display.setCursor(0, 120);

@@ -2,6 +2,7 @@
 // Implementation of getWeatherInfo function
 
 #include "Open_meteo.h"
+#include "WeatherDescription.h"
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -38,7 +39,7 @@ strWeatherInfo getWeatherInfo()
       info.temperature = doc["current"]["temperature_2m"] | 0.0f;
       info.surface_pressure = doc["current"]["pressure"] | 0.0f;
       info.weather_code = doc["current"]["weather_code"] | 0;
-      info.relative_humidity_2m = doc["current"]["humidity_2m"] | 0;
+      info.relative_humidity_2m = doc["current"]["relative_humidity_2m"] | 0;
       info.precipitation = doc["current"]["precipitation"] | 0.0f;
       info.wind_speed_10m = doc["current"]["wind_speed_10m"] | 0.0f;
       info.wind_direction_10m = doc["current"]["wind_direction_10m"] | 0;
@@ -54,8 +55,8 @@ strWeatherInfo getWeatherInfo()
 void printWeatherInfo(const strWeatherInfo &str) {
   Serial.println(String("Temperature: ") + str.temperature) ;
   Serial.println(String("Wind Speed: ") + str.wind_speed_10m) ;
-  Serial.println(String("Weather Code: ") + str.weather_code) ;
+  Serial.print(String("Weather: ") + str.weather_code) ;
+  Serial.println(String(" ") + getWeatherDescription(str.weather_code,1)) ;
   Serial.println(String("Precipitation: ") + str.precipitation) ;
   Serial.println(String("Relative Humidity: ") + str.relative_humidity_2m) ;
-
 }

@@ -25,6 +25,9 @@ const String WeatherURL = "https://api.open-meteo.com/v1/forecast?latitude=52.35
 
 strWeatherInfo getWeatherInfo() ;
 void printWeatherInfo(const strWeatherInfo &str) ;
+const char* windDirectionToString(int degrees) ;
+int windSpeedToBeaufort(float speed_ms) ;
+const char* beaufortDescription(int beaufort) ;
 
 
 #endif // OPEN_METEO_H

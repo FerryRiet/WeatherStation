@@ -74,49 +74,16 @@ void setup() {
 }
 
 void WeatherOnDisplay(const strWeatherInfo &info) {
- //   display.setRotation();
     display.fillScreen(GxEPD_WHITE);
-    display.setFont(&FreeSans18pt7b);
-    display.setTextColor(GxEPD_BLACK);
-    display.setCursor(0, 30);
-    display.print("Temp: ");
-    display.print(info.temperature);
-    display.println(" C");
-
     display.setFont(&FreeSans12pt7b);
-    int bft = windSpeedToBeaufort(info.wind_speed_10m);
-    display.setCursor(0, 60);
-    display.print("Wind: ");
-    display.print(info.wind_speed_10m, 1);
-    display.print(" m/s ");
-    display.print(windDirectionToString(info.wind_direction_10m));
-    display.print(bft);
-    display.println(" bft");
- 
-    display.setCursor(0, 90);
-    display.print("Wind: ");
-    display.println(beaufortDescription(bft));
+    display.setTextColor(GxEPD_BLACK);
 
-    display.setCursor(0, 120);
-    display.print("Weather: ");
-    display.println(getWeatherDescription(info.weather_code,1));
-
-    display.setCursor(0, 150);
-    display.print("Humidity: ");
-    display.print(info.relative_humidity_2m);
-    display.println(" %");
-
-    display.setCursor(0, 180);
-    display.print("Precip: ");
-    display.print(info.precipitation);
-    display.println(" mm");
-
-
-    display.setCursor(0, 210);
+    display.setFont(&FreeSans18pt7b);
     struct tm timeinfo;
     if (getLocalTime(&timeinfo)) {
         static const char* dagen[] = {"Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"};
         static const char* maanden[] = {"jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"};
+        display.setCursor(0, 30);
         display.print(dagen[timeinfo.tm_wday]);
         display.print(" ");
         display.print(timeinfo.tm_mday);
@@ -125,6 +92,41 @@ void WeatherOnDisplay(const strWeatherInfo &info) {
         display.print(" ");
         display.println(timeinfo.tm_year + 1900);
     }
+    display.drawLine(0, 38, display.width(), 38, GxEPD_RED);
+
+    display.setFont(&FreeSans12pt7b);
+    display.setCursor(0, 60);
+    display.print("Temp: ");
+    display.print(info.temperature);
+    display.println(" C");
+
+    display.setFont(&FreeSans12pt7b);
+    display.setCursor(0, 90);
+    display.print("Weather: ");
+    display.println(getWeatherDescription(info.weather_code,1));
+
+    int bft = windSpeedToBeaufort(info.wind_speed_10m);
+    display.setCursor(0, 120);
+    display.print("Wind: ");
+    display.println(beaufortDescription(bft));
+
+    display.setCursor(0, 150);
+    display.print("Wind: ");
+    display.print(info.wind_speed_10m, 1);
+    display.print(" m/s ");
+    display.print(windDirectionToString(info.wind_direction_10m));
+    display.print(" B");
+    display.println(bft);
+
+    display.setCursor(0, 180);
+    display.print("Humidity: ");
+    display.print(info.relative_humidity_2m);
+    display.println(" %");
+
+    display.setCursor(0, 210);
+    display.print("Precip: ");
+    display.print(info.precipitation);
+    display.println(" mm");
 
     display.display();
 }

@@ -80,7 +80,7 @@ const char* beaufortDescription(int beaufort) {
 }
 
 const char* windDirectionToString(int degrees) {
-  const char* directions[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+  const char* directions[] = {"N ", "NE ", "E ", "SE ", "S ", "SW ", "W ", "NW "};
   int index = (int)((degrees + 22.5) / 45.0) % 8;
   return directions[index];
 }

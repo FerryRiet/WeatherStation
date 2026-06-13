@@ -68,15 +68,29 @@ int windSpeedToBeaufort(float speed_ms) {
   return 12;
 }
 
-const char* beaufortDescription(int beaufort) {
-  static const char* desc[] = {
+const char* beaufortDescription(int beaufort, int language) {
+  static const char* en[] = {
     "Calm", "Light air", "Light breeze", "Gentle breeze",
     "Moderate breeze", "Fresh breeze", "Strong breeze",
     "Near gale", "Gale", "Severe gale", "Storm",
     "Violent storm", "Hurricane"
   };
+  static const char* nl[] = {
+    "Kalm", "Zeer zwak", "Zwak", "Vrij matig",
+    "Matig", "Vrij krachtig", "Krachtig",
+    "Hard", "Stormachtig", "Storm", "Zware storm",
+    "Zeer zware storm", "Orkaan"
+  };
+  static const char* de[] = {
+    "Stille", "Leiser Zug", "Leichte Brise", "Schwache Brise",
+    "Mäßige Brise", "Frische Brise", "Starker Wind",
+    "Steifer Wind", "Stürmischer Wind", "Sturm", "Schwerer Sturm",
+    "Orkanartiger Sturm", "Orkan"
+  };
   if (beaufort < 0 || beaufort > 12) return "";
-  return desc[beaufort];
+  if (language == 0) return en[beaufort];
+  if (language == 1) return nl[beaufort];
+  return de[beaufort];
 }
 
 const char* windDirectionToString(int degrees) {
@@ -92,7 +106,7 @@ void printWeatherInfo(const strWeatherInfo &str) {
   }
   Serial.println(String("Temperature: ") + str.temperature) ;
   int bft = windSpeedToBeaufort(str.wind_speed_10m);
-  Serial.println(String("Wind: ") + str.wind_speed_10m + " m/s " + windDirectionToString(str.wind_direction_10m) + " B" + bft + " " + beaufortDescription(bft)) ;
+  Serial.println(String("Wind: ") + str.wind_speed_10m + " m/s " + windDirectionToString(str.wind_direction_10m) + " B" + bft + " " + beaufortDescription(bft, LANGUAGE_EN)) ;
   Serial.print(String("Weather: ") + str.weather_code) ;
   Serial.println(String(" ") + getWeatherDescription(str.weather_code,1)) ;
   Serial.println(String("Precipitation: ") + str.precipitation) ;

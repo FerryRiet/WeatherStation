@@ -12,6 +12,7 @@
 
 #include "Open_meteo.h"
 #include "WeatherDescription.h"
+#include "bitmaps.h"
 
 // ESP32-C6 CS(SS)=16,SCL(SCK)=4,SDA(MOSI)=6,BUSY=21,RES(RST)=22,DC=23
 #define CS_PIN (16)
@@ -101,30 +102,32 @@ void WeatherOnDisplay(const strWeatherInfo &info) {
     display.print(info.temperature);
     display.println(" C");
 
-    display.setFont(&FreeSans12pt7b);
-    display.setCursor(0, 93);
-    display.print("Weather: ");
-    display.println(getWeatherDescription(info.weather_code,1));
+    int idx = bitmap_index[info.weather_code];
+    if (idx >= 0) {
+        display.drawBitmap(0, 75, bitmaps[idx], 64, 64, GxEPD_BLACK);
+        display.setCursor(75, 110);
+        display.print(getWeatherDescription(info.weather_code, 1));
+    }
 
     int bft = windSpeedToBeaufort(info.wind_speed_10m);
-    display.setCursor(0, 123);
+    display.setCursor(0, 168);
     display.print("Wind: ");
-    display.println(beaufortDescription(bft));
+    display.println(beaufortDescription(bft, LANGUAGE_NL));
 
-    display.setCursor(0, 153);
+    display.setCursor(0, 198);
     display.print("Wind: ");
     display.print(info.wind_speed_10m, 1);
     display.print(" m/s ");
     display.print(windDirectionToString(info.wind_direction_10m));
     display.print(bft);
     display.println(" bft");
- 
-    display.setCursor(0, 183);
+
+    display.setCursor(0, 228);
     display.print("Humidity: ");
     display.print(info.relative_humidity_2m);
     display.println(" %");
 
-    display.setCursor(0, 213);
+    display.setCursor(0, 258);
     display.print("Precip: ");
     display.print(info.precipitation);
     display.println(" mm");
